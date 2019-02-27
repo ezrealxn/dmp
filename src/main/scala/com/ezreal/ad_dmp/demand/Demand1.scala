@@ -22,7 +22,7 @@ object Demand1 {
     /** 将df注册成表*/
     df1.createTempView("t_dmp")
     /** sql */
-    val result: DataFrame = spark.sql("select requestdate,provincename,cityname,count(1) 'active_num' from t_dmp group by requestdate,provincename,cityname")
+    val result: DataFrame = spark.sql("select substr(requestdate,0,10) reqDate,provincename,cityname,count(1) 'active_num' from t_dmp group by reqDate,provincename,cityname")
     /** 一个properties */
     val prop = new Properties()
     prop.setProperty("user","root")

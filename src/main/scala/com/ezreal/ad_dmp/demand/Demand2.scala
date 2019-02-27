@@ -1,9 +1,11 @@
 package com.ezreal.ad_dmp.demand
 
+import java.util.Properties
+
 import com.ezreal.ad_dmp.pojo.AreaResult
 import com.ezreal.ad_dmp.utils.{Demand2Kpi, SparkUtil}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 /**
   * 需求：地域维度KPI报表
@@ -78,9 +80,18 @@ object Demand2 {
       rdd._2._8,
       rdd._2._9
     )).toDF()
+
+
     result2.show(10,false)
 
+    val props = new Properties()
+    props.setProperty("user","root")
+    props.setProperty("password","root")
 
+    /** 写出到jdbc */
+    df2.write.mode(SaveMode.Append).jdbc("jdbc:mysql://localhost:3306/dmp?useUnicode=true&characterEncoding=UTF-8&useSSL=false","t_province_dmp",props)
+
+    result2.write.mode(SaveMode.Append).jdbc("jdbc:mysql://localhost:3306/dmp?useUnicode=true&characterEncoding=UTF-8&useSSL=false","t_province_dmp1",props)
 
     df2.show(10,false)
 
